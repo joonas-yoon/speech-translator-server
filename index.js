@@ -1,6 +1,32 @@
-var http = require('http');
-var express = require('express');
+var http = require('http'),
+    fs = require('fs'),
+    express = require('express'),
+    bodyParser = require('body-parser'),
+    multer = require('multer'),
+    path = require('path');
+
+var uploadDir = path.join(__dirname, '/..', '/uploads/');
+var uploader = multer({ dest: uploadDir });
+
 var app = express();
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+
+app.use(require('method-override')());
+
+app.get('/', function (req, res) {
+  res.send('Hello World!');
+});
+
+app.post('/collect', uploader.single('audio'), function (req, res) {
+  console.log(req.file);
+  res.json(req.body);
+});
+
+app.listen(8000, function () {
+  console.log('Example app listening on port 8000!');
+});
 
 // Socket connection
 // Creates new HTTP server for socket
@@ -35,3 +61,4 @@ setInterval(() => {
         sequenceNumberByClient.set(client, sequenceNumber + 1);
     }
 }, 5 * 1000);
+
