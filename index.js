@@ -46,11 +46,13 @@ app.post('/collect',
   function (req, res) {
     console.log(req.body);
 
+    var language_code = req.body.langcode || 'en-US';
+
     syncRecognize(
       req.file.convertedPath,
       'LINEAR16',
       48000,
-      'en-US',
+      language_code,
       function (response){
         return res.json(response);
       }
@@ -117,7 +119,7 @@ function sendUploadToGCS(req, res, next) {
     return next();
   }
 
-  const gcsname = Date.now() + '-' + req.file.originalname;
+  const gcsname = req.body.filename || (Date.now() + '-' + req.file.originalname);
   const file = bucket.file(gcsname);
 
   const stream = file.createWriteStream({
