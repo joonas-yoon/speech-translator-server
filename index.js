@@ -45,6 +45,7 @@ app.post('/collect',
   sendUploadToGCS, 
   extractAudioToWav,
   function (req, res) {
+    console.log(req.file);
     console.log(req.body);
 
     var language_code = req.body.langcode || 'en-US';
@@ -55,6 +56,10 @@ app.post('/collect',
       48000,
       language_code,
       function (response){
+        // remove wav file
+        fs.unlink(req.file.convertedPath, (err) => {
+          if (err) console.error(err);
+        });
         return res.json(response);
       }
     );
@@ -148,7 +153,7 @@ function sendUploadToGCS(req, res, next) {
 // [END process]
 
 function extractAudioToWav(req, res, next){
-  const uploadDir = path.join(__dirname, '/..', 'uploads');
+  const uploadDir = path.join(__dirname, 'uploads');
   const convertedFilename = path.join(uploadDir, req.file.cloudStorageObject + '.wav');
 
   ffmpeg(req.file.cloudStoragePublicUrl)
