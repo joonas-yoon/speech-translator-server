@@ -16,3 +16,4 @@ yarn.lock
 **/yarn.lock
 configs/
 key.json
+uploads/

@@ -45,7 +45,7 @@ app.post('/collect',
   sendUploadToGCS, 
   extractAudioToWav,
   function (req, res) {
-    console.log(req.file);
+    // console.log(req.file);
     console.log(req.body);
 
     var language_code = req.body.langcode || 'en-US';
@@ -66,6 +66,21 @@ app.post('/collect',
   }
 );
 
+app.post('/translate',
+  function (req, res) {
+    var src_lang = req.body.src_lang;
+    var src_text = req.body.src_text;
+    var dst_lang = req.body.dst_lang;
+
+    if (!src_text) return res.status(404).end();
+
+    translate_sentence(src_text, dst_lang, (results) => {
+      console.log(results[1].data.translations);
+      return res.json(results);
+    });
+  }
+);
+
 app.listen(PORT, function () {
   console.log(`Example app listening on port ${PORT}`);
 });
@@ -80,7 +95,7 @@ function syncRecognize(filename, encoding, sampleRateHertz, languageCode, callba
 
   const config = {
     enableAutomaticPunctuation: true,
-    model: 'default',
+    model: 'video',
     encoding: encoding,
     sampleRateHertz: sampleRateHertz,
     languageCode: languageCode,
@@ -174,4 +189,28 @@ function extractAudioToWav(req, res, next){
       next();
     })
     .save(convertedFilename);
+}
+
+function translate_sentence(text, target_language, callback) {
+  // Imports the Google Cloud client library
+  const Translate = require('@google-cloud/translate');
+
+  // Instantiates a client
+  const translate = new Translate(configs);
+
+  // Translates some text into Russian
+  translate
+    .translate(text, target_language)
+    .then(results => {
+      const translation = results[0];
+  
+      console.log(`Text: ${text}`);
+      console.log(`Translation: ${translation}`);
+
+      callback(results);
+    })
+    .catch(err => {
+      console.error('ERROR:', err);
+      callback(err);
+    });
 }
