@@ -19,6 +19,7 @@ var uploader = multer({
   }
 });
 
+var PORT = 3000;
 var CLOUD_BUCKET = configs.CLOUD_BUCKET;
 var storage = gstorage({
   projectId: configs.projectId,
@@ -60,14 +61,13 @@ app.post('/collect',
   }
 );
 
-app.listen(configs.port, function () {
-  console.log(`Example app listening on port ${configs.port}`);
+app.listen(PORT, function () {
+  console.log(`Example app listening on port ${PORT}`);
 });
 
 function syncRecognize(filename, encoding, sampleRateHertz, languageCode, callback) {
   // [START speech_sync_recognize]
   // Imports the Google Cloud client library
-  const fs = require('fs');
   const speech = require('@google-cloud/speech');
 
   // Creates a client
