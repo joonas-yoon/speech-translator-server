@@ -60,8 +60,8 @@ app.post('/collect',
   }
 );
 
-app.listen(8000, function () {
-  console.log('Example app listening on port 8000!');
+app.listen(configs.port, function () {
+  console.log(`Example app listening on port ${configs.port}`);
 });
 
 function syncRecognize(filename, encoding, sampleRateHertz, languageCode, callback) {
