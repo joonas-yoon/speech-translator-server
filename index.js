@@ -137,7 +137,7 @@ function syncRecognize(filename, encoding, sampleRateHertz, languageCode, callba
 // [START process]
 function sendUploadToGCS(req, res, next) {
   if (!req.file) {
-    return next();
+    return res.status(500).json({error: 'No file uploaded'});
   }
 
   const gcsname = req.body.filename || (Date.now() + '-' + req.file.originalname);
