@@ -56,10 +56,12 @@ app.post('/collect',
       48000,
       language_code,
       function (response){
-        // remove wav file
-        fs.unlink(req.file.convertedPath, (err) => {
-          if (err) console.error(err);
-        });
+        setTimeout(() => {
+          // remove wav file
+          fs.unlink(req.file.convertedPath, (err) => {
+            if (err) console.error(err);
+          });
+        }, 60 * 1000);
         return res.json(response);
       }
     );
@@ -75,7 +77,6 @@ app.post('/translate',
     if (!src_text) return res.status(404).end();
 
     translate_sentence(src_text, dst_lang, (results) => {
-      console.log(results[1].data.translations);
       return res.json(results);
     });
   }
@@ -95,7 +96,7 @@ function syncRecognize(filename, encoding, sampleRateHertz, languageCode, callba
 
   const config = {
     enableAutomaticPunctuation: true,
-    model: 'video',
+    model: 'default',
     encoding: encoding,
     sampleRateHertz: sampleRateHertz,
     languageCode: languageCode,
