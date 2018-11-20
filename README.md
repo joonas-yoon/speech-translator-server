@@ -29,7 +29,7 @@ also copy our [samples/node-configs.js](https://github.com/joonas-yoon/speech-tr
 ### Deploy with docker containers
 ```
 $ sudo apt install docker docker-compose -y
-$ sudo docker build --tag node-nginx:1.0 .
+$ sudo docker build --tag node-app .
 $ sudo docket-compose up -d
 ```
 

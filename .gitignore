@@ -17,3 +17,5 @@ yarn.lock
 configs/
 key.json
 uploads/
+.env.docker
+.env

@@ -1,34 +1,18 @@
 version: '2'
 
-services:  
+services:
+  app:
+    image: node-app:latest
+    ports:
+      - 3000
+
   nginx:
     container_name: node-nginx-lb
     build: ./nginx
     links:
-      - app-1:app-1
-      - app-2:app-2
-      - app-3:app-3
+      - app:app
     ports:
       - 80:80
     depends_on:
-      - app-1
-      - app-2
-      - app-3
+      - app
 
-  app-1:
-    container_name: node-nginx-1
-    image: node-nginx:1.0
-    ports:
-      - 3000
-
-  app-2:
-    container_name: node-nginx-2
-    image: node-nginx:1.0
-    ports:
-      - 3000
-
-  app-3:
-    container_name: node-nginx-3
-    image: node-nginx:1.0
-    ports:
-      - 3000
