@@ -1,7 +1,8 @@
 sudo: required
 env:
-  matrix:
+  global:
   - DOCKER_COMPOSE_VERSION=1.8.0
+  matrix:
   - secure: gmPQBxdJrMvpevkKjoGa51ihcZIBq6PkTwWobQk5ZSebHI36EFJT6WRJvvjEj2YwGyZplRfh3/L/HZMxanRMEHQYZ19TpvsZylReNpVWVFFXTLGn5R+lQeGujwY4JhchxUslMuxBqqpDKdULCfYx4EGwkLuLEaWVRI4tTJ7b5ZsDgqUS26e6N3mNxPVMeb8DBIShYEEUOn/fSfx8DNmc7YRm4mbwQFkm7MoWghXU2PaV/+95eAIJH8swa/l8OsaxLTGyui9oqAw2dYKkVPRZ3e93PbNBP2Y6ZYcm0qdgk1e3qKwi5wR4zz7l/4V7TYQ61GndxrqwiLGpRrSzAEh0JFfZB5V+H/zB3NYceF6aD/fwSD0fr+MPLFhtWLbwPWGEabviCEktOa/CS+TXzy1R3XB00Iwavt8CBJ5OzdirIjr30VoaeWqV16pTo6Z/lQZEzU32jFuL4HdVm0O4kV/6NRpo0ZbIhqGNwqO9pGVywkGVP3kej026fchKxP2YdY4Z+yCh2inwELfBhh5J+dWF0phQenCuIxI7XwuCyR8ASsmTIuUYsLo46B/pJBRX7v9EXJCC/QoPWBjneWYRqs0AJ9Hm4k0yeaMooKGDeU0FWPq4drEDQZXZKEcFG1KWf2JzzsPp62RnXJajUfXjgRP4XXJKNM7EUY/C0tAIn72e9Fo=
 before_install:
 - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
