@@ -41,3 +41,9 @@ If you get "Hello World" when following command, it works fine.
 $ curl http://localhost/
 Hello World!
 ```
+
+## Preview with [client for Google Chrome Extension](https://github.com/joonas-yoon/speech-translator)
+
+[![Video v1.2](https://img.youtube.com/vi/Dry5jo6nQF4/0.jpg)](https://youtu.be/Dry5jo6nQF4)
+
+Youtube: https://youtu.be/Dry5jo6nQF4
