@@ -1,4 +1,10 @@
 sudo: required
+
+language: go
+
+services:
+  - docker
+
 env:
   global:
   - DOCKER_COMPOSE_VERSION=1.8.0
@@ -6,6 +12,7 @@ env:
   - secure: dIKWstilTjB4gLq+L3gY0YVXnfFofEioHcq1ShFSiCh0bIV7krKdz/K5MzGBY7qlmccDe08rh0Ap2Vy98hQB/STj4ka8qSfEYH/mxmIjjzzXDvvTScFhQv1k+KaRSVcf/7KlUhJNNt0QkXxm68J9MSa2gX60wJc2rVaDc8SmV+4xWj7mg1bqHexyvpeDNscp8s03R1qqX/E8uJdZe+8ACQQFpmNRFpstD2c67sK7hGqiAtrCWdN2RtMR6hDPFu3dVbOewjulwrF5PYiHSwi8Leo0Y09sOcRqZ3jPQ7gQzKaARs0Q818KKlepIBA7p6FEAe7l9gqbo9JlYNmQDeLddXTKFyYX0ad30U38zeGoG6Fzy/9abTqHIgTWzv99s+Hfruu3KtDkdMPED4JzJRsmT14gcozxZ8Fw7N4v5u9NZSTz76pKVOWOW8yn6466jrXVudMW5mt9i7cCEp5g+R/0PJsl+hN/xI6pMxjo7qRyIrVqYFCjGNDQohEy2p7KmVmkMr59MH0yFQOU+44ldurpcSre++HniFk0nqeQLJwu3LAFGhdZMfZ9ZTQy44rHf7nIQBRrt5NsXPIcXJfSP1UyNlKv8L34MmT5JD+J8DpEOoo/DUNBfKTVnUilTLHQM6pyNzrq/T1+hnd/8uqHj87TimBJ762/Jne1xFPWZraLG1E=
   matrix:
   - secure: gmPQBxdJrMvpevkKjoGa51ihcZIBq6PkTwWobQk5ZSebHI36EFJT6WRJvvjEj2YwGyZplRfh3/L/HZMxanRMEHQYZ19TpvsZylReNpVWVFFXTLGn5R+lQeGujwY4JhchxUslMuxBqqpDKdULCfYx4EGwkLuLEaWVRI4tTJ7b5ZsDgqUS26e6N3mNxPVMeb8DBIShYEEUOn/fSfx8DNmc7YRm4mbwQFkm7MoWghXU2PaV/+95eAIJH8swa/l8OsaxLTGyui9oqAw2dYKkVPRZ3e93PbNBP2Y6ZYcm0qdgk1e3qKwi5wR4zz7l/4V7TYQ61GndxrqwiLGpRrSzAEh0JFfZB5V+H/zB3NYceF6aD/fwSD0fr+MPLFhtWLbwPWGEabviCEktOa/CS+TXzy1R3XB00Iwavt8CBJ5OzdirIjr30VoaeWqV16pTo6Z/lQZEzU32jFuL4HdVm0O4kV/6NRpo0ZbIhqGNwqO9pGVywkGVP3kej026fchKxP2YdY4Z+yCh2inwELfBhh5J+dWF0phQenCuIxI7XwuCyR8ASsmTIuUYsLo46B/pJBRX7v9EXJCC/QoPWBjneWYRqs0AJ9Hm4k0yeaMooKGDeU0FWPq4drEDQZXZKEcFG1KWf2JzzsPp62RnXJajUfXjgRP4XXJKNM7EUY/C0tAIn72e9Fo=
+
 before_install:
 - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu
@@ -22,7 +29,19 @@ before_install:
 - docker build --tag node-app .
 - cp samples/.env.docker.sample .env.docker
 - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+install:
 - docker-compose build --pull db nginx && docker-compose build app
 - docker-compose up -d
-- docker ps
 - docker-compose logs
+
+before_script:
+- docker-compose ps
+- docker ps
+
+script:
+- curl http://localhost/
+
+after_script:
+- docker-compose stop
+- docker-compose rm -f
