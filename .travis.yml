@@ -23,5 +23,6 @@ before_install:
 - cp samples/.env.docker.sample .env.docker
 - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 - docker-compose build --pull db nginx && docker-compose build app
-- docker-compose start
+- docker-compose up -d
 - docker ps
+- docker-compose logs
