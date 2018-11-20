@@ -31,6 +31,16 @@ ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 var app = express();
 
+var mongoose = require('mongoose');
+
+// CONNECT TO MONGODB SERVER
+var db = mongoose.connection;
+db.on('error', console.error);
+db.once('open', function(){
+  console.log("Connected to mongod server");
+});
+mongoose.connect(process.env.DB);
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
