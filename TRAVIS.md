@@ -57,8 +57,7 @@ before_install:
 
   # Setup your application stack. You may need to tweak these commands if you
   # doing out-of-the-ordinary docker-compose builds.
-  - docker-compose pull
-  - docker-compose build
+  - docker-compose build --pull db nginx && docker-compose build app
   - docker-compose start
 
   # You will want this for logging. If one of your containers does not build for
