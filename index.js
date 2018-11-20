@@ -29,8 +29,6 @@ var bucket = storage.bucket(CLOUD_BUCKET);
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
-var app = express();
-
 var mongoose = require('mongoose');
 
 // CONNECT TO MONGODB SERVER
@@ -40,6 +38,8 @@ db.once('open', function(){
   console.log("Connected to mongod server");
 });
 mongoose.connect(process.env.DB);
+
+var app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());

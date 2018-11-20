@@ -4,11 +4,11 @@ const path = require('path');
 
 const configs = {
 
-  projectId: process.env.projectId || '<project id>',
+  projectId: process.env.GCP_PROJECT_ID || '<project id>',
 
-  keyFilename: process.env.keyFilename || path.join(__dirname, '..', 'key.json'),
+  keyFilename: process.env.GCP_KEYFILENAME || path.join(__dirname, '..', 'key.json'),
 
-  CLOUD_BUCKET: '<google cloud bucket name>'
+  CLOUD_BUCKET: process.env.GCP_CLOUD_BUCKET || '<google cloud bucket name>'
 
 };
 
