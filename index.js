@@ -46,6 +46,8 @@ app.use(bodyParser.json());
 
 app.use(methodOverride());
 
+app.use('/admin', require('./routes/admin'));
+
 app.get('/', function (req, res) {
   res.send('Hello World!');
 });
