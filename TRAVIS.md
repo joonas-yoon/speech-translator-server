@@ -1,9 +1,19 @@
+## Requirements
+- Ruby
+- RubyGems/travis
+```
+sudo apt-get install ruby`ruby -e 'puts RUBY_VERSION[/\d+\.\d+/]'`-dev
+sudo gem install travis
+``` 
+
 ## Encrypting environment variables
 - [document](https://docs.travis-ci.com/user/environment-variables/)
 - add environment variables on `.travis.yml`
 
 ```
 travis encrypt $(cat .env.docker) --add env.matrix
+travis encrypt DOCKER_USERNAME=username --add env.global
+travis encrypt DOCKER_PASSWORD=password --add env.global
 ```
 
 ## Before install
@@ -40,6 +50,10 @@ before_install:
 
   # Build required image in `docker-compose.yml` before docker-compose pulls.
   - docker build --tag node-app .
+
+  # Environments
+  - cp samples/.env.docker.sample .env.docker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
   # Setup your application stack. You may need to tweak these commands if you
   # doing out-of-the-ordinary docker-compose builds.
