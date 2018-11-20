@@ -10,7 +10,8 @@ const VersionSchema = new Schema({
   filepath: { type: String, default: '' },
   filename: { type: String, default: '' },
   released: { type: Boolean, default: false },
-  date: { type: Date, default: Date.now }
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now }
 });
 
 VersionSchema.path('identifier').required(true, 'Version identifier cannot be blank');
