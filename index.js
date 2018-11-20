@@ -82,6 +82,25 @@ app.post('/translate',
   }
 );
 
+app.get('/translate/supports', function (req, res) {
+  // Imports the Google Cloud client library
+  const Translate = require('@google-cloud/translate');
+
+  // Instantiates a client
+  const translate = new Translate(configs);
+
+  // Lists available translation language with their names in English (the default).
+  translate
+    .getLanguages()
+    .then(results => {
+      return res.status(200).json(results[0]);
+    })
+    .catch(err => {
+      console.error('ERROR:', err);
+      return res.status(500).json({error: err});
+    });
+});
+
 app.listen(PORT, function () {
   console.log(`Example app listening on port ${PORT}`);
 });
