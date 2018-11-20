@@ -29,15 +29,7 @@ var bucket = storage.bucket(CLOUD_BUCKET);
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
-var mongoose = require('mongoose');
-
-// CONNECT TO MONGODB SERVER
-var db = mongoose.connection;
-db.on('error', console.error);
-db.once('open', function(){
-  console.log("Connected to mongod server");
-});
-mongoose.connect(process.env.DB);
+var mongoose = require('./libs/mongoose');
 
 var app = express();
 
@@ -114,7 +106,7 @@ app.get('/translate/supports', function (req, res) {
 });
 
 app.listen(PORT, function () {
-  console.log(`Example app listening on port ${PORT}`);
+  console.log(`[app] listening on port ${PORT}`);
 });
 
 function syncRecognize(filename, encoding, sampleRateHertz, languageCode, callback) {
