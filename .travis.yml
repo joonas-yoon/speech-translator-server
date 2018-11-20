@@ -32,6 +32,9 @@ before_install:
   # before doing the update.
   - docker-compose --version
 
+  # Build required image in `docker-compose.yml` before docker-compose pulls.
+  - docker build --tag node-app .
+
   # Setup your application stack. You may need to tweak these commands if you
   # doing out-of-the-ordinary docker-compose builds.
   - docker-compose pull
