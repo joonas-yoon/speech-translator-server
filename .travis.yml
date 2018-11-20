@@ -1,48 +1,23 @@
 sudo: required
-
 env:
+  matrix:
   - DOCKER_COMPOSE_VERSION=1.8.0
-
+  - secure: gmPQBxdJrMvpevkKjoGa51ihcZIBq6PkTwWobQk5ZSebHI36EFJT6WRJvvjEj2YwGyZplRfh3/L/HZMxanRMEHQYZ19TpvsZylReNpVWVFFXTLGn5R+lQeGujwY4JhchxUslMuxBqqpDKdULCfYx4EGwkLuLEaWVRI4tTJ7b5ZsDgqUS26e6N3mNxPVMeb8DBIShYEEUOn/fSfx8DNmc7YRm4mbwQFkm7MoWghXU2PaV/+95eAIJH8swa/l8OsaxLTGyui9oqAw2dYKkVPRZ3e93PbNBP2Y6ZYcm0qdgk1e3qKwi5wR4zz7l/4V7TYQ61GndxrqwiLGpRrSzAEh0JFfZB5V+H/zB3NYceF6aD/fwSD0fr+MPLFhtWLbwPWGEabviCEktOa/CS+TXzy1R3XB00Iwavt8CBJ5OzdirIjr30VoaeWqV16pTo6Z/lQZEzU32jFuL4HdVm0O4kV/6NRpo0ZbIhqGNwqO9pGVywkGVP3kej026fchKxP2YdY4Z+yCh2inwELfBhh5J+dWF0phQenCuIxI7XwuCyR8ASsmTIuUYsLo46B/pJBRX7v9EXJCC/QoPWBjneWYRqs0AJ9Hm4k0yeaMooKGDeU0FWPq4drEDQZXZKEcFG1KWf2JzzsPp62RnXJajUfXjgRP4XXJKNM7EUY/C0tAIn72e9Fo=
 before_install:
-  # update is required to update the repositories to see the new packages for
-  # Docker.
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-  - sudo apt-get update
-
-  # Now we can install the newer docker-engine which is required for the newer
-  # docker-composer we will install next. The messy options are to force it to
-  # be non-interactive (normally it asks you a bunch of config questions).
-  - sudo apt-get -y install docker-ce
-
-  # Print out the current docker-compose version. Once this reports 1.6+ then we
-  # do not need the following steps.
-  - docker-compose --version
-
-  # As of the writing of this script Travis has docker-compose v1.4.2, we need
-  # to update it to 1.8+. $DOCKER_COMPOSE_VERSION is provide from the `env`
-  # above.
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-
-  # Check that docker-compose is now running the latest version (or at least the
-  # one we specified). This is not to be confused with the version we printed
-  # before doing the update.
-  - docker-compose --version
-
-  # Build required image in `docker-compose.yml` before docker-compose pulls.
-  - docker build --tag node-app .
-
-  # Setup your application stack. You may need to tweak these commands if you
-  # doing out-of-the-ordinary docker-compose builds.
-  - docker-compose pull
-  - docker-compose build
-  - docker-compose start
-
-  # You will want this for logging. If one of your containers does not build for
-  # whatever reason it's best to report that now before your tests start
-  # otherwise it can be really tricky to debug why tests are failing sometimes.
-  - docker ps
-
+- curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+- sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu
+  $(lsb_release -cs) stable"
+- sudo apt-get update
+- sudo apt-get -y install docker-ce
+- docker-compose --version
+- sudo rm /usr/local/bin/docker-compose
+- curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname
+  -s`-`uname -m` > docker-compose
+- chmod +x docker-compose
+- sudo mv docker-compose /usr/local/bin
+- docker-compose --version
+- docker build --tag node-app .
+- docker-compose pull
+- docker-compose build
+- docker-compose start
+- docker ps
