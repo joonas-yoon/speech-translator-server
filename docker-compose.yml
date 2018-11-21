@@ -2,7 +2,7 @@ version: '2'
 
 services:
   app:
-    image: node-app:latest
+    build: ./app
     ports:
       - 3000
     links:

@@ -26,14 +26,13 @@ before_install:
 - chmod +x docker-compose
 - sudo mv docker-compose /usr/local/bin
 - docker-compose --version
-- docker build --tag node-app app
-- cp samples/.env.docker.sample app/.env.docker
+- cp samples/.env.docker.sample .env.docker
 - mkdir app/configs
 - cp samples/node-configs.js app/configs/index.js
 - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 install:
-- docker-compose build --pull db nginx && docker-compose build app
+- docker-compose build
 - docker-compose up -d
 - docker-compose logs
 
