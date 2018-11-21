@@ -2,6 +2,8 @@
 
 [Here](https://github.com/joonas-yoon/speech-translator) the client is as Google Chrome Extensions
 
+[![Build Status](https://travis-ci.org/joonas-yoon/speech-translator-server.svg?branch=master)](https://travis-ci.org/joonas-yoon/speech-translator-server)
+
 ## Get Started
 
 ### Set up

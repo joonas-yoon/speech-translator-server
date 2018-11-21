@@ -7,7 +7,7 @@ services:
       - 3000
     links:
       - db
-    env_file: .env.docker
+    env_file: environment/production.env
 
   db:
     image: mongo:latest
@@ -15,7 +15,7 @@ services:
     volumes:
       - ./data/db:/data/db
     restart: always
-    env_file: .env.docker
+    env_file: environment/production.env
     command: mongod --smallfiles --logpath=/dev/null # --quiet
 
   nginx:
