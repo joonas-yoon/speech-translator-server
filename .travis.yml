@@ -29,7 +29,7 @@ before_install:
 - docker build --tag node-app app
 - cp samples/.env.docker.sample app/.env.docker
 - mkdir app/configs
-- cp sample/node-configs.js app/configs/index.js
+- cp samples/node-configs.js app/configs/index.js
 - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 install:
