@@ -34,15 +34,20 @@ before_install:
 install:
 - docker-compose build
 - docker-compose up -d
-- docker-compose logs
 
 before_script:
-- docker-compose ps
 - docker ps
+- docker-compose ps
+- docker-compose logs
 
 script:
+- sleep 5
 - curl http://localhost/
 
 after_script:
 - docker-compose stop
 - docker-compose rm -f
+
+notifications:
+- on_success: never
+- on_failure: always
