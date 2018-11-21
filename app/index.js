@@ -1,5 +1,4 @@
-var http = require('http'),
-    fs = require('fs'),
+var fs = require('fs'),
     express = require('express'),
     bodyParser = require('body-parser'),
     multer = require('multer'),
@@ -8,9 +7,9 @@ var http = require('http'),
     ffmpegInstaller = require('@ffmpeg-installer/ffmpeg'),
     ffmpeg = require('fluent-ffmpeg'),
     configs = require('./configs'),
-    record = require('node-record-lpcm16'),
     speech = require('@google-cloud/speech'),
-    gstorage = require('@google-cloud/storage');
+    gstorage = require('@google-cloud/storage'),
+    mongoose = require('./libs/mongoose');
 
 var uploader = multer({
   storage: multer.MemoryStorage,
@@ -29,15 +28,14 @@ var bucket = storage.bucket(CLOUD_BUCKET);
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
-var mongoose = require('./libs/mongoose');
-
 var app = express();
-
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-
 app.use(methodOverride());
 
+// routes
+const passport = require('./libs/passport')(app);
+app.use('/', require('./routes/user'));
 app.use('/admin', require('./routes/admin'));
 
 app.get('/', function (req, res) {

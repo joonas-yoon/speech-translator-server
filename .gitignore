@@ -16,7 +16,6 @@ yarn.lock
 **/yarn.lock
 configs/
 key.json
-uploads/
 data/
 .env.docker
 .env
