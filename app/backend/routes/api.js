@@ -1,50 +1,38 @@
-var fs = require('fs'),
-    express = require('express'),
-    bodyParser = require('body-parser'),
-    multer = require('multer'),
-    methodOverride = require('method-override'),
-    path = require('path'),
-    ffmpegInstaller = require('@ffmpeg-installer/ffmpeg'),
-    ffmpeg = require('fluent-ffmpeg'),
-    configs = require('./configs'),
-    speech = require('@google-cloud/speech'),
-    gstorage = require('@google-cloud/storage'),
-    mongoose = require('./libs/mongoose');
+const fs = require('fs'),
+      path = require('path'),
+      multer = require('multer'),
+      express = require('express'),
+      ffmpegInstaller = require('@ffmpeg-installer/ffmpeg'),
+      ffmpeg = require('fluent-ffmpeg'),
+      speech = require('@google-cloud/speech'),
+      gstorage = require('@google-cloud/storage'),
+      configs = require('../configs');
 
-var uploader = multer({
+const uploader = multer({
   storage: multer.MemoryStorage,
   limits: {
     fileSize: 5 * 1024 * 1024 // no larger than 5mb
   }
 });
 
-var PORT = 3000;
-var CLOUD_BUCKET = configs.CLOUD_BUCKET;
-var storage = gstorage({
+const CLOUD_BUCKET = configs.CLOUD_BUCKET;
+const storage = gstorage({
   projectId: configs.projectId,
   keyFilename: configs.keyFilename
 });
-var bucket = storage.bucket(CLOUD_BUCKET);
+const bucket = storage.bucket(CLOUD_BUCKET);
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
-var app = express();
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
-app.use(methodOverride());
+const router = express.Router();
 
-// routes
-const passport = require('./libs/passport')(app);
-app.use('/', require('./routes/user'));
-app.use('/admin', require('./routes/admin'));
-
-app.get('/', function (req, res) {
-  res.send('Hello World!');
+router.use(function(req, res, next) {
+  next();
 });
 
-app.post('/collect',
+router.post('/collect',
   uploader.single('audio'),
-  sendUploadToGCS, 
+  sendUploadToGCS,
   extractAudioToWav,
   function (req, res) {
     // console.log(req.file);
@@ -70,7 +58,7 @@ app.post('/collect',
   }
 );
 
-app.post('/translate',
+router.post('/translate',
   function (req, res) {
     var src_lang = req.body.src_lang;
     var src_text = req.body.src_text;
@@ -84,7 +72,7 @@ app.post('/translate',
   }
 );
 
-app.get('/translate/supports', function (req, res) {
+router.get('/translate/supports', function (req, res) {
   // Imports the Google Cloud client library
   const Translate = require('@google-cloud/translate');
 
@@ -101,10 +89,6 @@ app.get('/translate/supports', function (req, res) {
       console.error('ERROR:', err);
       return res.status(500).json({error: err});
     });
-});
-
-app.listen(PORT, function () {
-  console.log(`[app] listening on port ${PORT}`);
 });
 
 function syncRecognize(filename, encoding, sampleRateHertz, languageCode, callback) {
@@ -149,7 +133,6 @@ function syncRecognize(filename, encoding, sampleRateHertz, languageCode, callba
     });
   // [END speech_sync_recognize]
 }
-
 
 // Express middleware that will automatically pass uploads to Cloud Storage.
 // req.file is processed and will have two new properties:
@@ -225,7 +208,7 @@ function translate_sentence(text, target_language, callback) {
     .translate(text, target_language)
     .then(results => {
       const translation = results[0];
-  
+
       console.log(`Text: ${text}`);
       console.log(`Translation: ${translation}`);
 
@@ -236,3 +219,5 @@ function translate_sentence(text, target_language, callback) {
       callback(err);
     });
 }
+
+module.exports = router;
