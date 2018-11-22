@@ -48,5 +48,6 @@ after_script:
 - docker-compose rm -f
 
 notifications:
-- on_success: never
-- on_failure: always
+  emails:
+    on_success: never
+    on_failure: always
