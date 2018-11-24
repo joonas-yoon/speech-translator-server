@@ -2,6 +2,7 @@ FROM mhart/alpine-node:10.13.0
 COPY . /src
 RUN  cd /src/backend; npm install
 RUN  cd /src/frontend; npm install
+RUN  npm run build
 RUN  cd /src; npm install
 
 WORKDIR /src
