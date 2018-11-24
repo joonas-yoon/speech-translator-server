@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
   app:
@@ -8,6 +8,10 @@ services:
     links:
       - db
     env_file: environment/production.env
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
 
   db:
     image: mongo:latest
