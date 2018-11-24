@@ -21,6 +21,7 @@ services:
   nginx:
     container_name: node-nginx-lb
     build: ./nginx
+    restart: always
     links:
       - app:app
     ports:

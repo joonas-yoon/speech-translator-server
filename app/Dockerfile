@@ -1,7 +1,9 @@
 FROM mhart/alpine-node:10.13.0
-COPY backend /src
+COPY . /src
+RUN  cd /src/backend; npm install
+RUN  cd /src/frontend; npm install
 RUN  cd /src; npm install
-EXPOSE 3000
-WORKDIR /src
 
-CMD node index.js
+WORKDIR /src
+EXPOSE 3000
+CMD npm start

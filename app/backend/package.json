@@ -1,6 +1,6 @@
 {
-  "name": "speech-translate",
-  "version": "0.1.0",
+  "name": "api-server",
+  "version": "0.1.1",
   "description": "",
   "main": "index.js",
   "dependencies": {
@@ -34,6 +34,6 @@
     "translate",
     "speech to text"
   ],
-  "author": "joonas.yoon",
+  "author": "Joona Yoon <joonas.yoon@gmail.com>",
   "license": "ISC"
 }
