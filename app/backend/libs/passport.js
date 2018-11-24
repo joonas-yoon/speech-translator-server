@@ -9,8 +9,8 @@ module.exports = function(app) {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  passport.serializeUser(User.serializeUser());
-  passport.deserializeUser(User.deserializeUser());
+  passport.serializeUser(User.serialize);
+  passport.deserializeUser(User.deserialize);
   passport.use(new LocalStrategy(User.authenticate()));
 
   return passport;

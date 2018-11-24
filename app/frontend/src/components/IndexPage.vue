@@ -1,8 +1,13 @@
 <template>
   <div class="ui container">
-    <h1>Hello</h1>
-    <div class="">
-    </div>
+    <h1>{{ greeting }}</h1>
+
+    <router-link to="/">Home</router-link>
+
+    <a href="" v-if="isAuthenticated" @click.prevent="onClickLogout">Logout</a>
+    <router-link to="/login" v-else>Login</router-link>
+
+    <router-link to="/me">Me</router-link>
 
     <h2>Supported Languages</h2>
     <div class="languages">
@@ -14,8 +19,14 @@
 </template>
 
 <script>
+import store from '@/store'
+
 export default {
   created () {
+    this.$http.get('/hello')
+      .then((response) => {
+        this.greeting = response.data.text
+      })
     this.$http.get('/api/translate/supports')
       .then((response) => {
         this.languages = response.data
@@ -24,7 +35,18 @@ export default {
   name: 'Index',
   data () {
     return {
+      greeting: '',
       languages: []
+    }
+  },
+  computed: {
+    isAuthenticated () {
+      return store.getters.isAuthenticated
+    }
+  },
+  methods: {
+    onClickLogout () {
+      store.dispatch('LOGOUT').then(() => this.$router.push('/'))
     }
   }
 }

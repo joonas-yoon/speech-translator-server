@@ -6,7 +6,6 @@ const router = express.Router();
 const User = require('../libs/user');
 
 router.use(function(req, res, next) {
-  console.log(req.user);
   next();
 });
 
@@ -19,8 +18,8 @@ router.get('/logout', function(req, res) {
   res.json({ message: 'logged out' });
 });
 
-router.get('/user', requireAuthenticated, function(req, res) {
-  User.get(req, res);
+router.get('/me', requireAuthenticated, function(req, res) {
+  User.me(req, res);
 });
 
 router.post('/user', function(req, res) {

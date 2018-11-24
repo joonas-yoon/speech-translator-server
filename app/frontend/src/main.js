@@ -3,8 +3,11 @@
 import Vue from 'vue'
 import axios from 'axios'
 
+import 'es6-promise/auto'
+
 import App from './App'
 import router from './router'
+import store from './store'
 
 Vue.config.productionTip = false
 
@@ -14,6 +17,7 @@ Vue.prototype.$http = axios
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

@@ -3,7 +3,8 @@ const fs = require('fs'),
       session = require('express-session'),
       bodyParser = require('body-parser'),
       methodOverride = require('method-override'),
-      flash = require("connect-flash");
+      flash = require('connect-flash'),
+      cors = require('cors');
 
 const PORT = 3000;
 
@@ -21,6 +22,7 @@ app.use(flash());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(methodOverride());
+app.use(cors());
 
 // passport
 const passport = require('./libs/passport')(app);
