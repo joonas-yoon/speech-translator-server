@@ -3,47 +3,34 @@ const passport = require('passport');
 
 const router = express.Router();
 
-// const User = require('../libs/user');
+const User = require('../libs/user');
 
 router.use(function(req, res, next) {
   console.log(req.user);
   next();
 });
 
-router.get('/login', function(req, res) {
-  res.send('users').end();
+router.post('/login', requireAuthenticated, function(req, res) {
+  res.json({ user: req.user });
 });
-
-router.post('/login',
-  passport.authenticate('local', {
-    failureRedirect: '/login',
-    successRedirect: '/?success'
-  })
-);
 
 router.get('/logout', function(req, res) {
   req.logout();
-  res.redirect('/?logout');
+  res.json({ message: 'logged out' });
 });
 
-/*
-router.get('/users', User.list);
-
-router.get('/users/:id', function(req, res) {
+router.get('/user', requireAuthenticated, function(req, res) {
   User.get(req, res);
 });
 
-router.post('/users', function(req, res) {
+router.post('/user', function(req, res) {
   User.create(req, res);
 });
 
-router.put('/users/:id', function(req, res) {
-  User.update(req, res);
-});
-
-router.delete('/users/:id', function(req, res) {
-  User.delete(req, res);
-});
-*/
+function requireAuthenticated(req, res, next) {
+  passport.authenticate('local', {
+    failureFlash: true
+  })(req, res, next);
+}
 
 module.exports = router;
