@@ -1,4 +1,5 @@
 **/*.log
+**/*.swp
 node_modules
 **/node_modules/**
 .coverage

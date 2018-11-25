@@ -25,8 +25,8 @@ export default {
       // run action named 'LOGIN'
       this.$store.dispatch('LOGIN', {username, password})
         .then(() => this.redirect())
-        .catch((message) => {
-          this.message = message
+        .catch(({response}) => {
+          this.message = response.data
         })
     },
     redirect () {

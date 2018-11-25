@@ -24,9 +24,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    LOGIN (state, {user}) {
-      state.accessToken = user.accessToken
-      localStorage.accessToken = user.accessToken
+    LOGIN (state, {accessToken}) {
+      state.accessToken = accessToken
+      localStorage.accessToken = accessToken
     },
     LOGOUT (state) {
       state.accessToken = null
@@ -37,6 +37,7 @@ export default new Vuex.Store({
     LOGIN ({commit}, {username, password}) {
       return axios.post(`${resourceHost}/login`, {username, password})
         .then(({data}) => {
+          console.log(data)
           commit('LOGIN', data)
           axios.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`
         })
@@ -44,6 +45,6 @@ export default new Vuex.Store({
     LOGOUT ({commit}) {
       axios.defaults.headers.common['Authorization'] = undefined
       commit('LOGOUT')
-    }
+    },
   }
 })
