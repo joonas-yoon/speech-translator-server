@@ -1,4 +1,5 @@
 const fs = require('fs'),
+      path = require('path'),
       express = require('express'),
       session = require('express-session'),
       bodyParser = require('body-parser'),
@@ -27,11 +28,14 @@ app.use(cors());
 // passport
 const passport = require('./libs/passport')(app);
 
-// vue-router
-app.use(require('connect-history-api-fallback')());
+// static files
+app.use('/static', express.static(path.join(__dirname, 'public', 'static')));
 
 // routes
 app.use('/', require('./routes'));
+
+// vue-router
+app.use(require('connect-history-api-fallback')());
 
 app.listen(PORT, function () {
   console.log(`[app] listening on port ${PORT}`);
