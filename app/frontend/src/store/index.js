@@ -4,7 +4,7 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
-const resourceHost = 'http://localhost:3000'
+const resourceHost = 'http://localhost:' + (process.env.NODE_PORT || 3000)
 
 const enhanceAccessToeken = () => {
   const {accessToken} = localStorage

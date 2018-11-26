@@ -4,6 +4,8 @@
 
 const path = require('path')
 
+const PORT = process.env.NODE_PORT || 3000;
+
 module.exports = {
   dev: {
     // Paths
@@ -11,7 +13,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/': {
-        target: 'http://localhost:3000/',
+        target: `http://localhost:${PORT}/`,
         changeOrigin: true
       }
     },
