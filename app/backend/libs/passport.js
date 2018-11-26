@@ -41,21 +41,18 @@ module.exports = function(app) {
     usernameField: 'username',
     passwordField: 'password'
   }, (username, password, done) => {
-    try {
-      UserModel.findOne({ username }, (err, user) => {
-        if( err || !user ){
-          return done(null, false, {message : 'User not found'});
-        }
+    UserModel.findOne({ username }, async (err, user) => {
+      if( err || !user ){
+        return done(null, false, {message : 'User not found'});
+      }
 
-        const validate = user.isValidPassword(password);
-        if( !validate ){
-          return done(null, false, {message : 'Wrong Password'});
-        }
-        return done(null, user, {message : 'Logged in Successfully'});
-      });
-    } catch (error) {
-      return done(error);
-    }
+      const validate = await user.isValidPassword(password);
+      if( !validate ){
+        return done(null, false, {message : 'Wrong Password'});
+      }
+
+      return done(null, user, {message : 'Logged in Successfully'});
+    });
   }));
 
   return passport;
