@@ -4,7 +4,7 @@ services:
   app:
     build: ./app
     ports:
-      - 8080
+      - 3000
     links:
       - db
     env_file: environment/production.env

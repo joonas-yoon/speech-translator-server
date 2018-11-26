@@ -7,5 +7,5 @@ WORKDIR /src
 RUN npm run build
 RUN npm install
 
-EXPOSE 8080
+EXPOSE 3000
 CMD npm start
