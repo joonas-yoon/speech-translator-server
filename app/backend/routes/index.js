@@ -11,7 +11,7 @@ router.use(function(req, res, next) {
 router.use('/', require('./user'));
 
 router.use('/admin', require('./admin'));
-router.use('/api', require('./api'));
+router.use('/app', require('./app'));
 router.use('/versions', require('./version'));
 
 router.get('/hello', function (req, res) {
@@ -20,10 +20,6 @@ router.get('/hello', function (req, res) {
   res.json({
     text: greeting
   });
-});
-
-router.get('/', function (req, res, next) {
-  res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
 
 module.exports = router;

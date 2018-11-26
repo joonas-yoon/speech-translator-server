@@ -26,11 +26,11 @@ import store from '@/store'
 
 export default {
   created () {
-    this.$http.get('/hello')
+    this.$http.get('/api/hello')
       .then((response) => {
         this.greeting = response.data.text
       })
-    this.$http.get('/api/translate/supports')
+    this.$http.get('/api/app/translate/supports')
       .then((response) => {
         this.languages = response.data
       })

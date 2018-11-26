@@ -4,8 +4,6 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
-const resourceHost = 'http://localhost:' + (process.env.NODE_PORT || 3000)
-
 const enhanceAccessToeken = () => {
   const {accessToken} = localStorage
   if (!accessToken) return
@@ -35,7 +33,7 @@ export default new Vuex.Store({
   },
   actions: {
     LOGIN ({commit}, {username, password}) {
-      return axios.post(`${resourceHost}/login`, {username, password})
+      return axios.post('/api/login', {username, password})
         .then(({data}) => {
           console.log(data)
           commit('LOGIN', data)

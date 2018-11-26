@@ -35,7 +35,10 @@ const passport = require('./libs/passport')(app);
 app.use('/static', express.static(path.join(__dirname, 'public', 'static')));
 
 // routes
-app.use('/', require('./routes'));
+app.use('/api', require('./routes'));
+app.get('/', function (req, res, next) {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // vue-router
 app.use(require('connect-history-api-fallback')());

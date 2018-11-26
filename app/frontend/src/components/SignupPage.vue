@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     onSubmit (form) {
-      this.$http.post('/signup', form)
+      this.$http.post('/api/signup', form)
         .then(response => {
           alert('Registered successfully')
           this.$router.push({
