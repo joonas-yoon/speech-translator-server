@@ -5,7 +5,10 @@
     <router-link to="/">Home</router-link>
 
     <a href="" v-if="isAuthenticated" @click.prevent="onClickLogout">Logout</a>
-    <router-link to="/login" v-else>Login</router-link>
+    <div v-else>
+      <router-link to="/login">Login</router-link>
+      <router-link to="/signup">Sign up</router-link>
+    </div>
 
     <router-link to="/me">Me</router-link>
 

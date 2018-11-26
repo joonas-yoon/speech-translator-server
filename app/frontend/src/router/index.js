@@ -4,6 +4,7 @@ import Router from 'vue-router'
 
 import Index from '@/components/IndexPage'
 import Login from '@/components/LoginPage'
+import Signup from '@/components/SignupPage'
 import Me from '@/components/MyPage'
 import store from '@/store'
 
@@ -27,6 +28,11 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/signup',
+      name: 'Sign up',
+      component: Signup
     },
     {
       path: '/me',

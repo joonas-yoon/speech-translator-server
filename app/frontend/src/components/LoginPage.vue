@@ -7,6 +7,7 @@
       <input type="submit" value="Login">
     </form>
     <p><i>{{ message }}</i></p>
+    <router-link to="/signup">Sign up</router-link>
   </div>
 </template>
 
