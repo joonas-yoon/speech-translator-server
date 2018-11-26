@@ -15,5 +15,3 @@ google-cloud-logging-bunyan-*.tgz
 yarn.lock
 **/yarn.lock
 data/
-.env.docker
-.env

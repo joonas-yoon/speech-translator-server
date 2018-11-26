@@ -1,11 +1,9 @@
-FROM mhart/alpine-node:10.13.0
+FROM node:10.13.0-slim
 COPY . /src
 RUN  cd /src/backend; npm install
 RUN  cd /src/frontend; npm install
 
+EXPOSE 3000
 WORKDIR /src
 RUN npm run build
-RUN npm install
-
-EXPOSE 3000
-CMD npm start
+CMD npm run server

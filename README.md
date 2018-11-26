@@ -27,6 +27,10 @@ $ vi key.json
 
 also copy our [samples/node-configs.js](https://github.com/joonas-yoon/speech-translator-server/blob/master/samples/node-configs.js) to `configs/index.js`, and fill in the fields.
 
+```
+$ mkdir app/backend/configs
+$ cp samples/node-configs.js app/backend/configs/index.js
+```
 
 ### Deploy with docker containers
 ```
