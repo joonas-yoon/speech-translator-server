@@ -25,6 +25,9 @@ app.use(bodyParser.json());
 app.use(methodOverride());
 app.use(cors());
 
+// configure view engine
+app.set('view engine', 'html');
+
 // passport
 const passport = require('./libs/passport')(app);
 
