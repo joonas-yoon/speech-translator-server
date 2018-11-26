@@ -7,7 +7,7 @@ const fs = require('fs'),
       flash = require('connect-flash'),
       cors = require('cors');
 
-const PORT = 3000;
+const PORT = process.env.NODE_PORT || 3000;
 
 // database
 const mongoose = require('./libs/mongoose');
