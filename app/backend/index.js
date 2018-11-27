@@ -5,7 +5,8 @@ const fs = require('fs'),
       bodyParser = require('body-parser'),
       methodOverride = require('method-override'),
       flash = require('connect-flash'),
-      cors = require('cors');
+      cors = require('cors'),
+      history = require('connect-history-api-fallback');
 
 const PORT = process.env.NODE_PORT || 3000;
 
@@ -32,16 +33,15 @@ app.set('view engine', 'html');
 const passport = require('./libs/passport')(app);
 
 // static files
-app.use('/static', express.static(path.join(__dirname, 'public', 'static')));
+app.use('/', express.static(path.join(__dirname, 'public')));
 
 // routes
 app.use('/api', require('./routes'));
-app.get('/', function (req, res, next) {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
 
 // vue-router
-app.use(require('connect-history-api-fallback')());
+app.use(history({
+  logging: console.log.bind(console)
+}));
 
 app.listen(PORT, function () {
   console.log(`[app] listening on port ${PORT}`);
