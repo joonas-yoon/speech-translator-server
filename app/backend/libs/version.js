@@ -72,7 +72,7 @@ exports.list = function(req, res){
 };
 
 exports.getLatest = function(req, res){
-  Version.find({released: true}).sort('-created_at -identifier').findOne({}, function(err, version){
+  Version.findOne({released: true}).sort('-created_at -identifier').findOne({}, function(err, version){
     if(err) return res.status(500).end();
     res.json(version);
   });
@@ -80,13 +80,13 @@ exports.getLatest = function(req, res){
 
 exports.download = function(req, res){
   var identifier = req.params.id;
-  Version.find({
+  Version.findOne({
     identifier: identifier,
     released: true
   }, function(err, version){
     if(err) return res.status(500).end();
     if(!version || !version.public_url) return res.status(404).end();
-    res.send(version.public_url);
+    res.redirect(version.public_url);
   });
 };
 
