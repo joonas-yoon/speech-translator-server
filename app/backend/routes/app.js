@@ -5,8 +5,8 @@ const fs = require('fs'),
       ffmpegInstaller = require('@ffmpeg-installer/ffmpeg'),
       ffmpeg = require('fluent-ffmpeg'),
       speech = require('@google-cloud/speech'),
-      gstorage = require('@google-cloud/storage'),
-      configs = require('../configs');
+      configs = require('../configs'),
+      gcloud = require('../libs/gcloud');
 
 const uploader = multer({
   storage: multer.MemoryStorage,
@@ -14,13 +14,6 @@ const uploader = multer({
     fileSize: 5 * 1024 * 1024 // no larger than 5mb
   }
 });
-
-const CLOUD_BUCKET = configs.CLOUD_BUCKET;
-const storage = gstorage({
-  projectId: configs.projectId,
-  keyFilename: configs.keyFilename
-});
-const bucket = storage.bucket(CLOUD_BUCKET);
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
@@ -34,7 +27,10 @@ router.use(function(req, res, next) {
 
 router.post('/collect',
   uploader.single('audio'),
-  sendUploadToGCS,
+  gcloud.uploadToGCS({
+    prefix: 'records/',
+    bucket: configs.CLOUD_BUCKET1
+  }),
   extractAudioToWav,
   function (req, res) {
     // console.log(req.file);
@@ -136,46 +132,9 @@ function syncRecognize(filename, encoding, sampleRateHertz, languageCode, callba
   // [END speech_sync_recognize]
 }
 
-// Express middleware that will automatically pass uploads to Cloud Storage.
-// req.file is processed and will have two new properties:
-// * ``cloudStorageObject`` the object name in cloud storage.
-// * ``cloudStoragePublicUrl`` the public url to the object.
-// [START process]
-function sendUploadToGCS(req, res, next) {
-  if (!req.file) {
-    return res.status(500).json({error: 'No file uploaded'});
-  }
-
-  const gcsname = req.body.filename || (Date.now() + '-' + req.file.originalname);
-  const file = bucket.file(gcsname);
-
-  const stream = file.createWriteStream({
-    metadata: {
-      contentType: req.file.mimetype
-    },
-    resumable: false
-  });
-
-  stream.on('error', (err) => {
-    req.file.cloudStorageError = err;
-    next(err);
-  });
-
-  stream.on('finish', () => {
-    req.file.cloudStorageObject = gcsname;
-    file.makePublic().then(() => {
-      req.file.cloudStoragePublicUrl = `https://storage.googleapis.com/${CLOUD_BUCKET}/${gcsname}`;
-      req.file.cloudStorageObjectUrl = `gs://${CLOUD_BUCKET}/${gcsname}`;
-      next();
-    });
-  });
-
-  stream.end(req.file.buffer);
-}
-// [END process]
-
 function extractAudioToWav(req, res, next){
-  const convertedFilename = path.join(WAV_DIRECTORY, req.file.cloudStorageObject + '.wav');
+  const filename = req.file.cloudStorageObject;
+  const convertedFilename = path.join(WAV_DIRECTORY, filename.replace('/', '-') + '.wav');
 
   ffmpeg(req.file.cloudStoragePublicUrl)
     .toFormat('wav')

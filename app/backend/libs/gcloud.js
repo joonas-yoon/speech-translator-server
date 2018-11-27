@@ -3,14 +3,14 @@ const path = require('path'),
 
 const configs = require('../configs');
 
-const CLOUD_BUCKET = configs.CLOUD_BUCKET;
 const storage = gstorage({
   projectId: configs.projectId,
   keyFilename: configs.keyFilename
 });
-const bucket = storage.bucket(CLOUD_BUCKET);
 
-exports.uploadToGCS = function (prefix) {
+exports.uploadToGCS = function ({prefix, bucket}) {
+  const CLOUD_BUCKET = bucket || configs.CLOUD_BUCKET1;
+  const remote_bucket = storage.bucket(CLOUD_BUCKET);
   return (req, res, next) => {
     if (!req.file) {
       return res.status(500).json({error: 'No file uploaded'});
@@ -19,7 +19,7 @@ exports.uploadToGCS = function (prefix) {
     const filePrefix = prefix || '';
     const filename = req.body.filename || (Date.now() + '-' + req.file.originalname);
     const gcsname = filePrefix + filename;
-    const file = bucket.file(gcsname);
+    const file = remote_bucket.file(gcsname);
 
     const stream = file.createWriteStream({
       metadata: {

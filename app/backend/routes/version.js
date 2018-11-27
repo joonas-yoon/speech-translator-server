@@ -5,6 +5,7 @@ const router = express.Router();
 
 const Version = require('../libs/version');
 const Gcloud = require('../libs/gcloud');
+const configs = require('../configs');
 
 const uploader = multer({
   storage: multer.MemoryStorage,
@@ -31,7 +32,10 @@ router.get('/detail/:id', function(req, res) {
 
 router.post('/', 
   uploader.single('zip'),
-  Gcloud.uploadToGCS('versions/'),
+  Gcloud.uploadToGCS({
+    prefix: 'versions/',
+    bucket: configs.CLOUD_BUCKET2
+  }),
   Version.create
 );
 
