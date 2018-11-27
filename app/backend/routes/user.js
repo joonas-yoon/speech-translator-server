@@ -36,11 +36,10 @@ router.get('/logout', function(req, res) {
   res.json({ message: 'logged out' });
 });
 
-router.get('/me', passport.authenticate('jwt', { session : false }), (req, res) => {
+router.get('/me', Auth.authenticate(), (req, res) => {
   res.json({
     message: 'You made it to the secure route',
-    user: req.user,
-    token: req.query.accessToken
+    user: req.user
   })
 });
 

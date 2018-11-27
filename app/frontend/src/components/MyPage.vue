@@ -16,8 +16,8 @@ export default {
   },
   created () {
     this.$http.get('/api/me')
-      .then((response) => {
-        this.user = response.user
+      .then(({data}) => {
+        this.user = data.user
       })
   }
 }
