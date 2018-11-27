@@ -1,12 +1,17 @@
 const express = require('express');
 const path = require('path');
 
+const Auth = require('../libs/auth');
+
 const router = express.Router();
 
-router.use(function(req, res, next) {
-  console.log(req.path)
-  next();
-});
+router.use(
+  Auth.authenticate(),
+  function(req, res, next) {
+    console.log(req.path)
+    next();
+  }
+);
 
 router.use('/', require('./user'));
 

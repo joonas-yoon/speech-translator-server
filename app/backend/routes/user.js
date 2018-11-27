@@ -19,10 +19,7 @@ router.post('/login', async (req, res, next) => {
       }
       req.login(user, { session : false }, async (error) => {
         if( error ) return next(error)
-        const token = Auth.signToken({
-          _id: user._id,
-          username: user.username
-        });
+        const token = Auth.signToken(user);
         return res.json({accessToken: token});
       });
     } catch (error) {
@@ -36,12 +33,15 @@ router.get('/logout', function(req, res) {
   res.json({ message: 'logged out' });
 });
 
-router.get('/me', Auth.authenticate(), (req, res) => {
-  res.json({
-    message: 'You made it to the secure route',
-    user: req.user
-  })
-});
+router.get('/me',
+  Auth.requireAuthenticated(),
+  function (req, res) {
+    res.json({
+      message: 'You made it to the secure route',
+      user: req.user
+    })
+  }
+);
 
 router.post('/signup',
   passport.authenticate('signup', { session : false }),
