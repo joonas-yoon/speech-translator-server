@@ -11,12 +11,14 @@ sudo gem install travis
 - add environment variables on `.travis.yml`
 
 ```
-travis encrypt $(cat .env.docker) --add env.matrix
 travis encrypt DOCKER_USERNAME=username --add env.global
 travis encrypt DOCKER_PASSWORD=password --add env.global
+travis encrypt $(cat environment/production.env) --add env.matrix
 ```
 
 ## Before install
+
+Set `DOCKER_COMPOSE_VERSION` on your environment variables. we use docker-compose-1.17.1 on now (proejct-version: 1.2.2, November 2018)
 
 ```
 before_install:
@@ -48,17 +50,20 @@ before_install:
   # before doing the update.
   - docker-compose --version
 
-  # Build required image in `docker-compose.yml` before docker-compose pulls.
-  - docker build --tag node-app .
+  # Update npm
+  - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+  - sudo apt-get install -y nodejs
+  - sudo npm install -g npm
+  - node -v && npm -v
 
   # Environments
-  - cp samples/.env.docker.sample .env.docker
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
   # Setup your application stack. You may need to tweak these commands if you
   # doing out-of-the-ordinary docker-compose builds.
-  - docker-compose build --pull db nginx && docker-compose build app
-  - docker-compose start
+  - docker-compose build
+  - docker-compose up -d
+  - docker-compose logs -f
 
   # You will want this for logging. If one of your containers does not build for
   # whatever reason it's best to report that now before your tests start
