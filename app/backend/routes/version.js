@@ -1,7 +1,17 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express'),
+      multer = require('multer');
 
-var Version = require('../libs/version');
+const router = express.Router();
+
+const Version = require('../libs/version');
+const Gcloud = require('../libs/gcloud');
+
+const uploader = multer({
+  storage: multer.MemoryStorage,
+  limits: {
+    fileSize: 15 * 1024 * 1024 // no larger than 15MB
+  }
+});
 
 router.use(function(req, res, next) {
   next();
@@ -19,9 +29,11 @@ router.get('/detail/:id', function(req, res) {
   Version.get(req, res);
 });
 
-router.post('/', function(req, res) {
-  Version.create(req, res);
-});
+router.post('/', 
+  uploader.single('zip'),
+  Gcloud.uploadToGCS('versions/'),
+  Version.create
+);
 
 router.put('/:id', function(req, res) {
   Version.update(req, res);

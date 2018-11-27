@@ -1,20 +1,22 @@
-const mongoose = require('mongoose');
-const Version = mongoose.model('Version');
+const mongoose = require('mongoose'),
+      gcloud = require('./gcloud');
 
-const path = require('path');
+const Version = mongoose.model('Version');
 
 exports.create = function(req, res){
   var version = new Version();
   version.identifier = req.body.identifier;
   version.description = req.body.description || '';
+  version.public_url = req.file.cloudStoragePublicUrl || '';
+  version.object_url = req.file.cloudStorageObjectUrl || '';
 
   version.save(function(err){
     if(err){
       console.error(err);
-      res.json({result: false});
+      res.status(500).json({result: false});
       return;
     }
-    res.json({result: true});
+    res.json({result: true, file: version});
   });
 };
 
@@ -83,7 +85,8 @@ exports.download = function(req, res){
     released: true
   }, function(err, version){
     if(err) return res.status(500).end();
-    if(!version || !version.link) return res.status(404).end();
-    res.sendfile(version.link);
+    if(!version || !version.public_url) return res.status(404).end();
+    res.send(version.public_url);
   });
 };
+
