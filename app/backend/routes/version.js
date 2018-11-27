@@ -7,15 +7,13 @@ router.use(function(req, res, next) {
   next();
 });
 
-router.get('/', function(req, res) {
-  res.send('Hello, admin').end();
-});
-
 router.get('/', Version.list);
 
 router.get('/latest', function(req, res) {
   Version.getLatest(req, res);
 });
+
+router.get('/download/:id', Version.download);
 
 router.get('/detail/:id', function(req, res) {
   Version.get(req, res);

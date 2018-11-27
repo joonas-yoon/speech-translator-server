@@ -4,15 +4,9 @@ const Version = mongoose.model('Version');
 const path = require('path');
 
 exports.create = function(req, res){
-  var current = new Date();
-
   var version = new Version();
   version.identifier = req.body.identifier;
-  version.filename = version.identifier + '-' + current.getTime();
-  version.filepath = path.join('.');
   version.description = req.body.description || '';
-  version.created_at = current;
-  version.updated_at = current;
 
   version.save(function(err){
     if(err){
@@ -82,4 +76,14 @@ exports.getLatest = function(req, res){
   });
 };
 
-
+exports.download = function(req, res){
+  var identifier = req.params.id;
+  Version.find({
+    identifier: identifier,
+    released: true
+  }, function(err, version){
+    if(err) return res.status(500).end();
+    if(!version || !version.link) return res.status(404).end();
+    res.sendfile(version.link);
+  });
+};
