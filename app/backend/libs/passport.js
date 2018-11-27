@@ -10,19 +10,17 @@ const Auth = require('./auth');
 
 module.exports = function(app) {
 
-  // app.use(passport.initialize());
-
   passport.use(new JWTstrategy({
     secretOrKey : Auth.getSecret(),
-    //we expect the user to send the token as a query paramater with the name 'secret_token'
-    jwtFromRequest : ExtractJWT.fromUrlQueryParameter('accessToken')
-  }, async (token, done) => {
-    try {
-      //Pass the user details to the next middleware
-      return done(null, token.user);
-    } catch (error) {
-      done(error);
-    }
+    jwtFromRequest : ExtractJWT.fromAuthHeaderAsBearerToken(),
+  }, async (payload, done) => {
+    UserModel.findById(payload.id)
+      .then(user => {
+        return done(null, user)
+      })
+      .catch(err => {
+        return done(err)
+      })
   }));
 
   //Create a passport middleware to handle user registration
@@ -43,7 +41,7 @@ module.exports = function(app) {
   }, (username, password, done) => {
     UserModel.findOne({ username }, async (err, user) => {
       if( err || !user ){
-        return done(null, false, {message : 'User not found'});
+        return done(err, false, {message : 'User not found'});
       }
 
       const validate = await user.isValidPassword(password);
