@@ -49,7 +49,12 @@ exports.update = function(req, res){
 
 exports.get = function(req, res){
   var identifier = req.params.id;
-  Version.find({identifier: identifier}, function(err, version){
+  Version.findOne({
+    identifier: identifier
+  }, {
+    '_id': false,
+    'object_url': false
+  }, function(err, version){
     if(err) return res.status(500).end();
     res.json(version);
   });
@@ -72,10 +77,14 @@ exports.list = function(req, res){
 };
 
 exports.getLatest = function(req, res){
-  Version.findOne({released: true}).sort('-created_at -identifier').findOne({}, function(err, version){
-    if(err) return res.status(500).end();
-    res.json(version);
-  });
+  Version
+    .find({released: true})
+    .select({'_id': false, 'object_url': false})
+    .sort('-created_at -identifier')
+    .findOne({}, function(err, version){
+      if(err) return res.status(500).end();
+      res.json(version);
+    });
 };
 
 exports.download = function(req, res){
