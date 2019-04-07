@@ -14,4 +14,5 @@ google-cloud-logging-winston-*.tgz
 google-cloud-logging-bunyan-*.tgz
 yarn.lock
 **/yarn.lock
-data/
+data/db
+data/certbot

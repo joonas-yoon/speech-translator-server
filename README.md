@@ -32,6 +32,12 @@ $ mkdir app/backend/configs
 $ cp samples/node-configs.js app/backend/configs/index.js
 ```
 
+Read [this guide](https://medium.com/@pentacent/nginx-and-lets-encrypt-with-docker-in-less-than-5-minutes-b4b8a60d3a71) for setting up SSL(https)
+```
+sudo ./init-letsencrypt.sh
+```
+
+
 ### Deploy with docker containers
 ```
 $ sudo apt install docker docker-compose -y
@@ -44,7 +50,7 @@ $ sudo docket-compose up -d
 If you get "Hello World" when following command, it works fine.
 
 ```
-$ curl http://localhost/
+$ curl https://localhost/
 Hello World!
 ```
 
