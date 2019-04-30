@@ -27,4 +27,10 @@ router.get('/hello', function (req, res) {
   });
 });
 
+router.get('/ping', (req, res) => {
+  res.json({
+    result: true
+  })
+});
+
 module.exports = router;
