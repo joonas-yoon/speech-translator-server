@@ -1,3 +1,5 @@
+'use strict';
+
 const fs = require('fs'),
       path = require('path'),
       multer = require('multer'),
@@ -5,6 +7,7 @@ const fs = require('fs'),
       ffmpegInstaller = require('@ffmpeg-installer/ffmpeg'),
       ffmpeg = require('fluent-ffmpeg'),
       speech = require('@google-cloud/speech'),
+      {Translate} = require('@google-cloud/translate').v2,
       configs = require('../configs'),
       gcloud = require('../libs/gcloud');
 
@@ -71,9 +74,6 @@ router.post('/translate',
 );
 
 router.get('/translate/supports', function (req, res) {
-  // Imports the Google Cloud client library
-  const Translate = require('@google-cloud/translate');
-
   // Instantiates a client
   const translate = new Translate(configs);
 
@@ -91,8 +91,6 @@ router.get('/translate/supports', function (req, res) {
 
 function syncRecognize(filename, encoding, sampleRateHertz, languageCode, callback) {
   // [START speech_sync_recognize]
-  // Imports the Google Cloud client library
-  const speech = require('@google-cloud/speech');
 
   // Creates a client
   const client = new speech.SpeechClient(configs);
@@ -157,9 +155,6 @@ function extractAudioToWav(req, res, next){
 }
 
 function translate_sentence(text, target_language, callback) {
-  // Imports the Google Cloud client library
-  const Translate = require('@google-cloud/translate');
-
   // Instantiates a client
   const translate = new Translate(configs);
 

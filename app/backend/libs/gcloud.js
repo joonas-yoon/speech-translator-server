@@ -1,9 +1,11 @@
+'use strict';
+
 const path = require('path'),
-      gstorage = require('@google-cloud/storage');
+      {Storage} = require('@google-cloud/storage');
 
 const configs = require('../configs');
 
-const storage = gstorage({
+const storage = new Storage({
   projectId: configs.projectId,
   keyFilename: configs.keyFilename
 });

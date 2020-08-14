@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.DB);
+mongoose.connect(process.env.DB || '127.0.0.1');
 
 // CONNECT TO MONGODB SERVER
 var db = mongoose.connection;
