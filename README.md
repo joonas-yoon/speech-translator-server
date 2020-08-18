@@ -1,8 +1,22 @@
-# speech-translator-server
+# Speech Translator Server
 
-[Here](https://github.com/joonas-yoon/speech-translator) the client is as Google Chrome Extensions
+<p align="center">
+  <img src="https://github.com/joonas-yoon/speech-translator/raw/master/logo.png" alt="logo"/>
+</p>
 
-[![Build Status](https://travis-ci.org/joonas-yoon/speech-translator-server.svg?branch=master)](https://travis-ci.org/joonas-yoon/speech-translator-server)
+<p align="center">
+  <img src="https://img.shields.io/badge/version-0.1.2-blue.svg" alt="version-1.2.4"/>
+  <a href="https://travis-ci.org/joonas-yoon/speech-translator-server"><img src="https://travis-ci.org/joonas-yoon/speech-translator-server.svg?branch=master" alt="Build Status"/></a>
+</p>
+
+API Server for [@joonas-yoon/speech-translator](https://github.com/joonas-yoon/speech-translator)
+
+The server is developed as pipeline for automated request and response to reconize speech(STT) and translate it.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/9527681/90546588-40314880-e1c5-11ea-933b-555655be93b4.png" alt="architecture" />
+</p>
+
 
 ## Get Started
 
