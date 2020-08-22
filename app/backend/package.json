@@ -1,6 +1,6 @@
 {
   "name": "api-server",
-  "version": "1.0.2",
+  "version": "1.3.0",
   "description": "RESTful API Server",
   "main": "index.js",
   "dependencies": {
@@ -30,11 +30,14 @@
     "webpack-dev-server": "^3.11.0"
   },
   "devDependencies": {
+    "eslint": "^7.7.0",
+    "eslint-config-google": "^0.14.0",
     "nodemon": "^2.0.4"
   },
   "scripts": {
     "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --fix"
   },
   "keywords": [
     "streaming",

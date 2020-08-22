@@ -1,36 +1,32 @@
 const express = require('express');
-const path = require('path');
 
 const Auth = require('../libs/auth');
 
-const router = express.Router();
+const Router = express.Router();
 
-router.use(
-  Auth.authenticate(),
-  function(req, res, next) {
-    console.log(req.path)
-    next();
-  }
-);
+Router.use(Auth.authenticate(), function (req, res, next) {
+  console.log(req.path);
+  next();
+});
 
-router.use('/', require('./user'));
+Router.use('/', require('./user'));
 
-router.use('/admin', require('./admin'));
-router.use('/app', require('./app'));
-router.use('/versions', require('./version'));
+Router.use('/admin', require('./admin'));
+Router.use('/app', require('./app'));
+Router.use('/versions', require('./version'));
 
-router.get('/hello', function (req, res) {
-  var greeting = 'Welcome!';
+Router.get('/hello', function (req, res) {
+  let greeting = 'Welcome!';
   if (req.user) greeting = 'Hello, ' + req.user.username + '!';
   res.json({
-    text: greeting
+    text: greeting,
   });
 });
 
-router.get('/ping', (req, res) => {
+Router.get('/ping', (req, res) => {
   res.json({
-    result: true
-  })
+    result: true,
+  });
 });
 
-module.exports = router;
+module.exports = Router;
