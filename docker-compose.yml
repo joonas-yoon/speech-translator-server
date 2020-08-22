@@ -1,26 +1,32 @@
-version: '3'
+version: "3.2"
 
 services:
   app:
     build: ./app
     ports:
-      - 3000
+      - "3000"
     links:
-      - db
+      - mongodb
     env_file: environment/production.env
     deploy:
       replicas: 2
       restart_policy:
         condition: on-failure
+    networks:
+      - backend
 
-  db:
-    image: mongo:latest
+  mongodb:
+    image: mongo:4.0
     container_name: mongodb
     volumes:
       - ./data/db:/data/db
     restart: always
     env_file: environment/production.env
     command: mongod --smallfiles --logpath=/dev/null # --quiet
+    ports:
+      - "27017:27017"
+    networks:
+      - backend
 
   nginx:
     container_name: node-nginx-lb
@@ -29,7 +35,12 @@ services:
     links:
       - app:app
     ports:
-      - 80:80
+      - "80:80"
+    networks:
+      - backend
     depends_on:
       - app
 
+networks:
+  backend:
+    driver: bridge

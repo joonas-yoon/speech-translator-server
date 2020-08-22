@@ -6,9 +6,8 @@ const fs = require('fs'),
       express = require('express'),
       ffmpegInstaller = require('@ffmpeg-installer/ffmpeg'),
       ffmpeg = require('fluent-ffmpeg'),
-      speech = require('@google-cloud/speech'),
+      {SpeechClient} = require('@google-cloud/speech'),
       {Translate} = require('@google-cloud/translate').v2,
-      configs = require('../configs'),
       gcloud = require('../libs/gcloud');
 
 const uploader = multer({
@@ -30,10 +29,7 @@ router.use(function(req, res, next) {
 
 router.post('/collect',
   uploader.single('audio'),
-  gcloud.uploadToGCS({
-    prefix: 'records/',
-    bucket: configs.CLOUD_BUCKET1
-  }),
+  gcloud.uploadToGCS({prefix: 'records/'}),
   extractAudioToWav,
   function (req, res) {
     // console.log(req.file);
@@ -75,7 +71,7 @@ router.post('/translate',
 
 router.get('/translate/supports', function (req, res) {
   // Instantiates a client
-  const translate = new Translate(configs);
+  const translate = new Translate(gcloud.config);
 
   // Lists available translation language with their names in English (the default).
   translate
@@ -89,11 +85,11 @@ router.get('/translate/supports', function (req, res) {
     });
 });
 
-function syncRecognize(filename, encoding, sampleRateHertz, languageCode, callback) {
+async function syncRecognize(filename, encoding, sampleRateHertz, languageCode, callback) {
   // [START speech_sync_recognize]
 
   // Creates a client
-  const client = new speech.SpeechClient(configs);
+  const client = new SpeechClient(gcloud.config);
 
   const config = {
     enableAutomaticPunctuation: true,
@@ -103,8 +99,7 @@ function syncRecognize(filename, encoding, sampleRateHertz, languageCode, callba
     languageCode: languageCode,
   };
   const audio = {
-    content: fs.readFileSync(filename).toString('base64'),
-    // uri: filename,
+    content: fs.readFileSync(filename).toString('base64')
   };
 
   const request = {
@@ -113,20 +108,13 @@ function syncRecognize(filename, encoding, sampleRateHertz, languageCode, callba
   };
 
   // Detects speech in the audio file
-  client
-    .recognize(request)
-    .then(data => {
-      const response = data[0];
-      const transcription = response.results
-        .map(result => result.alternatives[0].transcript)
-        .join('\n');
-      console.log(`Transcription: "${transcription}"`);
-      callback(response);
-    })
-    .catch(err => {
-      console.error('ERROR:', err);
-      callback(err);
-    });
+  const [response] = await client.recognize(request);
+  const transcription = response.results
+    .map(result => result.alternatives[0].transcript)
+    .join('\n');
+  console.log(`Transcription: ${transcription}`);
+  callback(response);
+
   // [END speech_sync_recognize]
 }
 
@@ -138,6 +126,7 @@ function extractAudioToWav(req, res, next){
     .toFormat('wav')
     .audioChannels(1)
     .audioBitrate('48k')
+    .output(convertedFilename)
     .on('error', (err) => {
       console.log('An error occurred: ' + err.message);
       next(err);
@@ -151,12 +140,12 @@ function extractAudioToWav(req, res, next){
       req.file.convertedPath = convertedFilename;
       next();
     })
-    .save(convertedFilename);
+    .run();
 }
 
 function translate_sentence(text, target_language, callback) {
   // Instantiates a client
-  const translate = new Translate(configs);
+  const translate = new Translate(gcloud.config);
 
   // Translates some text into Russian
   translate

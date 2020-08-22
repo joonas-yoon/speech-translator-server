@@ -6,8 +6,8 @@ node_modules
 .nyc_output
 docs/
 out/
-system-test/secrets.js
-system-test/*key.json
+secrets.js
+key.json
 *.lock
 .DS_Store
 google-cloud-logging-winston-*.tgz

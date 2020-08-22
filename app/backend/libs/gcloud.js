@@ -5,13 +5,17 @@ const path = require('path'),
 
 const configs = require('../configs');
 
-const storage = new Storage({
-  projectId: configs.projectId,
-  keyFilename: configs.keyFilename
-});
+const config = {
+  projectId: configs.GCP_PROJECT_ID,
+  keyFilename: configs.GCP_KEYFILENAME
+};
+
+const storage = new Storage(config);
+
+exports.config = config;
 
 exports.uploadToGCS = function ({prefix, bucket}) {
-  const CLOUD_BUCKET = bucket || configs.CLOUD_BUCKET1;
+  const CLOUD_BUCKET = bucket || configs.CLOUD_BUCKET;
   const remote_bucket = storage.bucket(CLOUD_BUCKET);
   return (req, res, next) => {
     if (!req.file) {
