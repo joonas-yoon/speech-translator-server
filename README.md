@@ -1,21 +1,26 @@
 # Speech Translator Server
 
-<p align="center">
-  <img src="https://github.com/joonas-yoon/speech-translator/raw/master/logo.png" alt="logo"/>
-</p>
+<div align="center">
 
-<p align="center">
-  <img src="https://img.shields.io/badge/version-0.1.2-blue.svg" alt="version-1.2.4"/>
-  <a href="https://travis-ci.org/joonas-yoon/speech-translator-server"><img src="https://travis-ci.org/joonas-yoon/speech-translator-server.svg?branch=master" alt="Build Status"/></a>
-</p>
+![Logo](https://github.com/joonas-yoon/speech-translator/raw/0912f8685622e65900d88ebbbc5b0da91bec814c/docs/images/logo.png)
+
+</div>
+
+<div align="center">
+
+[![Build Status](https://travis-ci.org/joonas-yoon/speech-translator-server.svg?branch=master)](https://travis-ci.org/joonas-yoon/speech-translator-server)
+
+</div>
 
 API Server for [@joonas-yoon/speech-translator](https://github.com/joonas-yoon/speech-translator)
 
 The server is developed as pipeline for automated request and response to reconize speech(STT) and translate it.
 
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/9527681/90546588-40314880-e1c5-11ea-933b-555655be93b4.png" alt="architecture" />
-</p>
+<div align="center">
+
+![architecture](https://user-images.githubusercontent.com/9527681/90546588-40314880-e1c5-11ea-933b-555655be93b4.png)
+
+</div>
 
 
 ## Get Started
@@ -39,7 +44,13 @@ $ vi key.json
 }
 ```
 
-also copy our [samples/node-configs.js](https://github.com/joonas-yoon/speech-translator-server/blob/master/samples/node-configs.js) to `configs/index.js`, and fill in the fields.
+export your environment valuables before running application: [`environment/development.env`](./environment/development.env)
+
+```
+export $(cat ../environment/development.env)
+```
+
+or fill in the fields: [`app/backend/configs/index.js`](./app/backend/configs/index.js)
 
 ```
 $ mkdir app/backend/configs
@@ -50,8 +61,10 @@ $ cp samples/node-configs.js app/backend/configs/index.js
 ```
 $ sudo apt install docker docker-compose -y
 $ sudo docker build --tag node-app .
-$ sudo docket-compose up -d
+$ sudo docker-compose up -d
 ```
+
+Note: It uses environment variables in [`environment/production.env`](./environment/production.env)
 
 ### Finally
 
@@ -62,8 +75,10 @@ $ curl http://localhost/
 Hello World!
 ```
 
-## Preview with [client for Google Chrome Extension](https://github.com/joonas-yoon/speech-translator)
+## Video
 
-[![Video v1.2](https://img.youtube.com/vi/Dry5jo6nQF4/0.jpg)](https://youtu.be/Dry5jo6nQF4)
+[client for Google Chrome Extension](https://github.com/joonas-yoon/speech-translator)
 
-Youtube: https://youtu.be/Dry5jo6nQF4
+[![Video v1.3.1](https://img.youtube.com/vi/GaV_2DHSElM/0.jpg)](https://youtu.be/GaV_2DHSElM)
+
+Youtube: https://youtu.be/GaV_2DHSElM
