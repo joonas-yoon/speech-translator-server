@@ -52,10 +52,19 @@ export $(cat ../environment/development.env)
 
 or fill in the fields: [`app/backend/configs/index.js`](./app/backend/configs/index.js)
 
-```
-$ mkdir app/backend/configs
-$ cp samples/node-configs.js app/backend/configs/index.js
-```
+### Backend
+
+Framework: node.js
+
+[`~/app/backend/`](./app/backend/README.md)
+
+### Frontend
+
+Framework: Vue.js
+
+[`~/app/frontend/`](./app/frontend/README.md)
+
+nothing yet.
 
 ### Deploy with docker containers
 ```
@@ -64,7 +73,7 @@ $ sudo docker build --tag node-app .
 $ sudo docker-compose up -d
 ```
 
-Note: It uses environment variables in [`environment/production.env`](./environment/production.env)
+Note: It uses environment variables in production mode with [`environment/production.env`](./environment/production.env)
 
 ### Finally
 
