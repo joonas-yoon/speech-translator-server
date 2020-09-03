@@ -1,18 +1,21 @@
-const fs = require('fs'),
-      path = require('path'),
-      multer = require('multer'),
-      express = require('express'),
-      ffmpegInstaller = require('@ffmpeg-installer/ffmpeg'),
-      ffmpeg = require('fluent-ffmpeg'),
-      speech = require('@google-cloud/speech'),
-      configs = require('../configs'),
-      gcloud = require('../libs/gcloud');
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const multer = require('multer');
+const express = require('express');
+const ffmpegInstaller = require('@ffmpeg-installer/ffmpeg');
+const ffmpeg = require('fluent-ffmpeg');
+const speech = require('@google-cloud/speech');
+const { Translate } = require('@google-cloud/translate').v2;
+
+const gcloud = require('../libs/gcloud');
 
 const uploader = multer({
   storage: multer.MemoryStorage,
   limits: {
-    fileSize: 5 * 1024 * 1024 // no larger than 5mb
-  }
+    fileSize: 5 * 1024 * 1024, // no larger than 5mb
+  },
 });
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
@@ -21,16 +24,14 @@ const WAV_DIRECTORY = path.join(__dirname, '..', 'uploads');
 
 const router = express.Router();
 
-router.use(function(req, res, next) {
+router.use(function (req, res, next) {
   next();
 });
 
-router.post('/collect',
+router.post(
+  '/collect',
   uploader.single('audio'),
-  gcloud.uploadToGCS({
-    prefix: 'records/',
-    bucket: configs.CLOUD_BUCKET1
-  }),
+  gcloud.uploadToGCS({ prefix: 'records/' }),
   extractAudioToWav,
   function (req, res) {
     // console.log(req.file);
@@ -43,7 +44,7 @@ router.post('/collect',
       'LINEAR16',
       48000,
       language_code,
-      function (response){
+      function (response) {
         setTimeout(() => {
           // remove wav file
           fs.unlink(req.file.convertedPath, (err) => {
@@ -56,46 +57,45 @@ router.post('/collect',
   }
 );
 
-router.post('/translate',
-  function (req, res) {
-    var src_lang = req.body.src_lang;
-    var src_text = req.body.src_text;
-    var dst_lang = req.body.dst_lang;
+router.post('/translate', function (req, res) {
+  var src_lang = req.body.src_lang;
+  var src_text = req.body.src_text;
+  var dst_lang = req.body.dst_lang;
 
-    if (!src_text) return res.status(404).end();
+  if (!src_text) return res.status(404).end();
 
-    translate_sentence(src_text, dst_lang, (results) => {
-      return res.json(results);
-    });
-  }
-);
+  translateSentence(src_text, dst_lang, (results) => {
+    return res.json(results);
+  });
+});
 
 router.get('/translate/supports', function (req, res) {
-  // Imports the Google Cloud client library
-  const Translate = require('@google-cloud/translate');
-
   // Instantiates a client
-  const translate = new Translate(configs);
+  const translate = new Translate(gcloud.config);
 
   // Lists available translation language with their names in English (the default).
   translate
     .getLanguages()
-    .then(results => {
+    .then((results) => {
       return res.status(200).json(results[0]);
     })
-    .catch(err => {
+    .catch((err) => {
       console.error('ERROR:', err);
-      return res.status(500).json({error: err});
+      return res.status(500).json({ error: err });
     });
 });
 
-function syncRecognize(filename, encoding, sampleRateHertz, languageCode, callback) {
+async function syncRecognize(
+  filename,
+  encoding,
+  sampleRateHertz,
+  languageCode,
+  callback
+) {
   // [START speech_sync_recognize]
-  // Imports the Google Cloud client library
-  const speech = require('@google-cloud/speech');
 
   // Creates a client
-  const client = new speech.SpeechClient(configs);
+  const client = new speech.SpeechClient(gcloud.config);
 
   const config = {
     enableAutomaticPunctuation: true,
@@ -106,7 +106,6 @@ function syncRecognize(filename, encoding, sampleRateHertz, languageCode, callba
   };
   const audio = {
     content: fs.readFileSync(filename).toString('base64'),
-    // uri: filename,
   };
 
   const request = {
@@ -115,31 +114,28 @@ function syncRecognize(filename, encoding, sampleRateHertz, languageCode, callba
   };
 
   // Detects speech in the audio file
-  client
-    .recognize(request)
-    .then(data => {
-      const response = data[0];
-      const transcription = response.results
-        .map(result => result.alternatives[0].transcript)
-        .join('\n');
-      console.log(`Transcription: "${transcription}"`);
-      callback(response);
-    })
-    .catch(err => {
-      console.error('ERROR:', err);
-      callback(err);
-    });
+  const [response] = await client.recognize(request);
+  const transcription = response.results
+    .map((result) => result.alternatives[0].transcript)
+    .join('\n');
+  console.log(`Transcription: ${transcription}`);
+  callback(response);
+
   // [END speech_sync_recognize]
 }
 
-function extractAudioToWav(req, res, next){
+function extractAudioToWav(req, res, next) {
   const filename = req.file.cloudStorageObject;
-  const convertedFilename = path.join(WAV_DIRECTORY, filename.replace('/', '-') + '.wav');
+  const convertedFilename = path.join(
+    WAV_DIRECTORY,
+    filename.replace('/', '-') + '.wav'
+  );
 
   ffmpeg(req.file.cloudStoragePublicUrl)
     .toFormat('wav')
     .audioChannels(1)
     .audioBitrate('48k')
+    .output(convertedFilename)
     .on('error', (err) => {
       console.log('An error occurred: ' + err.message);
       next(err);
@@ -153,20 +149,17 @@ function extractAudioToWav(req, res, next){
       req.file.convertedPath = convertedFilename;
       next();
     })
-    .save(convertedFilename);
+    .run();
 }
 
-function translate_sentence(text, target_language, callback) {
-  // Imports the Google Cloud client library
-  const Translate = require('@google-cloud/translate');
-
+function translateSentence(text, target_language, callback) {
   // Instantiates a client
-  const translate = new Translate(configs);
+  const translate = new Translate(gcloud.config);
 
   // Translates some text into Russian
   translate
     .translate(text, target_language)
-    .then(results => {
+    .then((results) => {
       const translation = results[0];
 
       console.log(`Text: ${text}`);
@@ -174,7 +167,7 @@ function translate_sentence(text, target_language, callback) {
 
       callback(results);
     })
-    .catch(err => {
+    .catch((err) => {
       console.error('ERROR:', err);
       callback(err);
     });

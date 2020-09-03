@@ -1,10 +1,19 @@
 ## Requirements
+
 - Ruby
 - RubyGems/travis
+
+Linux:
 ```
-sudo apt-get install ruby`ruby -e 'puts RUBY_VERSION[/\d+\.\d+/]'`-dev
-sudo gem install travis
-``` 
+$ sudo apt-get install ruby`ruby -e 'puts RUBY_VERSION[/\d+\.\d+/]'`-dev
+$ sudo gem install travis
+```
+
+Windows:
+Install ruby for windows by [RubyInstaller](https://rubyinstaller.org/)
+```
+$ gem install travis
+```
 
 ## Encrypting environment variables
 - [document](https://docs.travis-ci.com/user/environment-variables/)
@@ -70,3 +79,7 @@ before_install:
   # otherwise it can be really tricky to debug why tests are failing sometimes.
   - docker ps
 ```
+
+## Travis CLI
+
+More details on https://github.com/travis-ci/travis.rb#readme
