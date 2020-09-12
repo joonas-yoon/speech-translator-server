@@ -8,6 +8,7 @@
 
 <div align="center">
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/68253fb653984af9a9b5f4783b45a316)](https://app.codacy.com/manual/joonas-yoon/speech-translator-server?utm_source=github.com&utm_medium=referral&utm_content=joonas-yoon/speech-translator-server&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/joonas-yoon/speech-translator-server.svg?branch=master)](https://travis-ci.org/joonas-yoon/speech-translator-server)
 
 </div>
